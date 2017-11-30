@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Jaksiemasz MVP</string>
+    <string name="initial_count">0 words</string>
+</resources>
