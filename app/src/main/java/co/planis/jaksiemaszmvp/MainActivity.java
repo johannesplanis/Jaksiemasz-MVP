@@ -7,6 +7,8 @@ import android.text.TextWatcher;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+
 class MainActivity extends AppCompatActivity implements Contract.View {
 
     private Contract.Presenter presenter = new PresenterImpl(RepositoryImpl.getInstance());
@@ -36,7 +38,8 @@ class MainActivity extends AppCompatActivity implements Contract.View {
 
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        presenter.textChanged(s.toString());
+                        EventBus.getDefault().post(new TextChangedEvent(s.toString()));
+                       // presenter.textChanged(s.toString());
                     }
 
                     @Override

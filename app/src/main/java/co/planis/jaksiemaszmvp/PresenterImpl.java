@@ -2,6 +2,9 @@ package co.planis.jaksiemaszmvp;
 
 import android.support.annotation.Nullable;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 class PresenterImpl implements Contract.Presenter {
 
     private Repository repository;
@@ -22,10 +25,7 @@ class PresenterImpl implements Contract.Presenter {
 
     @Override
     public void textChanged(String text) {
-        int wordCount = countWords(text);
-        String label = Integer.toString(wordCount) + resolveSingularPluralLabel(wordCount);
 
-        if (view != null) view.updateWordCount(label);
     }
 
     private int countWords(String text) {
@@ -36,13 +36,23 @@ class PresenterImpl implements Contract.Presenter {
         return count == 1 ? " word" : " words";
     }
 
+    @Subscribe
+    public void textChanged(TextChangedEvent event){
+        int wordCount = countWords(event.getText());
+        String label = Integer.toString(wordCount) + resolveSingularPluralLabel(wordCount);
+
+        if (view != null) view.updateWordCount(label);
+    }
+
     @Override
     public void attachView(Contract.View view) {
         this.view = view;
+        EventBus.getDefault().register(this);
     }
 
     @Override
     public void detachView() {
         this.view = null;
+        EventBus.getDefault().unregister(this);
     }
 }
